@@ -1,18 +1,20 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { GraduationCap } from 'lucide-react';
+import faculty1Image from '../../assets/facaulty_1.png';
+import faculty2Image from '../../assets/facaulty_2.png';
 
 const faculties = [
   {
     name: "Ojesh Bhagat",
     position: "Senior Faculty (XI-XII)",
     qualifications: "B.Sc-B.Ed, M.Sc (Maths), CTET+MPTET Qualified",
-    image: "https://images.unsplash.com/photo-1598975546110-65ec9e59e690?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBtYWxlJTIwdGVhY2hlciUyMHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MDU1NDYwOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    image: faculty2Image
   },
   {
     name: "Mr. Anup Kujur",
     position: "Senior Faculty (VI-VIII)",
     qualifications: "B.Sc-B.Ed, MA (English)",
-    image: "https://images.unsplash.com/photo-1766763845598-13da19913a6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBtYWxlJTIwcHJvZmVzc29yJTIwZm9ybWFsJTIwc3VpdHxlbnwxfHx8fDE3NzA1NTQ2MDl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+    image: faculty1Image
   }
 ];
 

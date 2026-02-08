@@ -1,5 +1,3 @@
-import logoImage from 'figma:asset/cedf937e41a3b7af28d985174fc05dfa2a3ac44b.png';
-
 export function WhySection() {
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-gray-50 to-white">
