@@ -1,6 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { FadeIn } from './fade-in';
 
 interface Facility {
   image: string;
@@ -60,13 +61,15 @@ export function FacilitiesSection() {
   }, []);
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-white overflow-hidden">
+    <section id="facilities" className="py-12 sm:py-16 md:py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Facilities</h2>
-          <div className="w-16 h-1 bg-orange-500 rounded-full mx-auto"></div>
-        </div>
+        <FadeIn>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">Our Facilities</h2>
+            <div className="w-16 h-1 bg-orange-500 rounded-full mx-auto"></div>
+          </div>
+        </FadeIn>
 
         {/* Animated Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">

@@ -22,7 +22,7 @@ export function Footer() {
             <h3 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Quick Links</h3>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
-                <a href="#home" className="hover:text-white transition-colors">
+                <a href="#results" className="hover:text-white transition-colors">
                   Home
                 </a>
               </li>
@@ -32,8 +32,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-white transition-colors">
-                  Services
+                <a href="#courses" className="hover:text-white transition-colors">
+                  Courses
                 </a>
               </li>
               <li>
@@ -54,13 +54,13 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#achievers" className="hover:text-white transition-colors">
-                  Achievers
+                <a href="#courses" className="hover:text-white transition-colors">
+                  Courses
                 </a>
               </li>
               <li>
-                <a href="#news" className="hover:text-white transition-colors">
-                  News & Updates
+                <a href="#facilities" className="hover:text-white transition-colors">
+                  Facilities
                 </a>
               </li>
             </ul>
@@ -125,11 +125,11 @@ export function Footer() {
       <div className="border-t border-gray-700 py-3 sm:py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs sm:text-sm">
           <p className="mb-1">
-            Developed <span className="text-white font-semibold">and</span> | Managed by{' '}
+            Developed and Managed by{' '}
             <span className="text-white font-semibold">metaSolve</span>
           </p>
           <p className="text-gray-400 text-[10px] sm:text-xs">
-            © 2025 metaSolve. All rights reserved.
+            © 2026 metaSolve. All rights reserved.
           </p>
           <p className="text-gray-400 text-[10px] sm:text-xs mt-1">
             Contact:{' '}

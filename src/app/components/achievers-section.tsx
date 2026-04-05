@@ -1,4 +1,6 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { PartyPopper } from 'lucide-react';
+import { FadeIn } from './fade-in';
 
 const achievers = [
   { name: "Vanshika Dhurwey", percentage: "94%", image: "https://images.unsplash.com/photo-1761125050322-bbfc155571bd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBmZW1hbGUlMjBzdHVkZW50JTIwcG9ydHJhaXR8ZW58MXx8fHwxNzcwNTU0MjA5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
@@ -16,34 +18,35 @@ const achievers = [
 
 export function AchieversSection() {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white to-blue-50">
+    <section id="results" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16 md:mb-20">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
-            Celebrating Our Achievers 🎉
-          </h2>
-          <p className="text-gray-600 text-base sm:text-lg mb-2 px-4">
-            Honoring the hard work, perseverance, and dedication of our toppers.
-          </p>
-          <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
-        </div>
+        <FadeIn>
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 flex items-center justify-center gap-2">
+              Celebrating Our Achievers <PartyPopper className="w-7 h-7 sm:w-8 sm:h-8 text-orange-500" />
+            </h2>
+            <p className="text-gray-600 text-base sm:text-lg mb-2 px-4">
+              Honoring the hard work, perseverance, and dedication of our toppers.
+            </p>
+            <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
+          </div>
+        </FadeIn>
 
         {/* Achievers Grid */}
         <div className="mb-12 sm:mb-16 md:mb-20 overflow-hidden relative">
-          <style dangerouslySetInnerHTML={{__html: `
+          <style>{`
             @keyframes scroll-left {
-              0% {
-                transform: translateX(0);
-              }
-              100% {
-                transform: translateX(-50%);
-              }
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
             }
             .animate-scroll {
               animation: scroll-left 40s linear infinite;
             }
-          `}} />
+            .animate-scroll:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
           <div className="flex gap-4 sm:gap-6 items-start animate-scroll">
             {[...achievers, ...achievers].map((achiever, index) => (
               <div key={index} className="flex flex-col items-center flex-shrink-0">
@@ -64,6 +67,7 @@ export function AchieversSection() {
         </div>
 
         {/* Stats Section */}
+        <FadeIn delay={0.2}>
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl shadow-lg py-6 px-4 sm:px-6 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {/* Proven Results */}
@@ -86,6 +90,7 @@ export function AchieversSection() {
             </div>
           </div>
         </div>
+        </FadeIn>
       </div>
     </section>
   );

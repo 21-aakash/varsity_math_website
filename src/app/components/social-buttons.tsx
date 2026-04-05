@@ -2,7 +2,7 @@ import { Youtube, Instagram } from 'lucide-react';
 
 export function SocialButtons() {
   return (
-    <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2 sm:gap-3">
+    <div className="fixed right-1 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2 sm:gap-3">
       {/* YouTube */}
       <a
         href="https://youtube.com"
@@ -27,7 +27,7 @@ export function SocialButtons() {
 
       {/* WhatsApp */}
       <a
-        href="https://wa.me/"
+        href="https://wa.me/917354506728"
         target="_blank"
         rel="noopener noreferrer"
         className="bg-green-500 hover:bg-green-600 text-white w-10 h-10 sm:w-14 sm:h-14 rounded-l-full flex items-center justify-center transition-all shadow-lg"

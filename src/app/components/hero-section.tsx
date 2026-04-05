@@ -1,3 +1,4 @@
+import { Rocket } from 'lucide-react';
 import heroImage from "../../assets/8e41855d282a4bafacc9b76298224e220cab9040.png";
 
 export function HeroSection() {
@@ -22,7 +23,7 @@ export function HeroSection() {
         {/* Heading */}
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-600 text-center mb-6 sm:mb-8 flex items-center gap-2 flex-wrap justify-center px-2">
           <span>LEARN SMART. LEARN DEEP. BUILD YOUR FUTURE</span>
-          <span>🚀</span>
+          <Rocket className="w-6 h-6 sm:w-7 sm:h-7 text-[#0066cc]" />
         </h2>
 
         {/* Hero Image Container */}
@@ -37,7 +38,7 @@ export function HeroSection() {
         </div>
 
         {/* CTA Button */}
-        <button className="bg-[#0891b2] hover:bg-[#0e7490] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold shadow-lg transition-all transform hover:scale-105">
+        <button className="bg-[#0066cc] hover:bg-[#0052a3] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold shadow-lg transition-all transform hover:scale-105">
           Enroll Now!
         </button>
       </div>

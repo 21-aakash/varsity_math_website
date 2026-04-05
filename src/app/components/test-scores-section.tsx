@@ -15,18 +15,11 @@ interface TestScoresSectionProps {
 }
 
 export function TestScoresSection({ studentName }: TestScoresSectionProps) {
-  // Mock data - In real app, this will come from Google Sheets filtered by student
-  const testScores: TestScore[] = [
-    { testName: 'Algebra Test 1', date: '2025-01-15', score: 85, maxScore: 100, subject: 'Algebra' },
-    { testName: 'Calculus Quiz 1', date: '2025-01-20', score: 92, maxScore: 100, subject: 'Calculus' },
-    { testName: 'Geometry Test 1', date: '2025-01-25', score: 78, maxScore: 100, subject: 'Geometry' },
-    { testName: 'Trigonometry Quiz', date: '2025-02-01', score: 88, maxScore: 100, subject: 'Trigonometry' },
-    { testName: 'Algebra Test 2', date: '2025-02-05', score: 95, maxScore: 100, subject: 'Algebra' },
-  ];
+  // Will be populated from API (Google Sheets) in future
+  const testScores: TestScore[] = [];
 
-  // Mock ranking data - In real app, calculated from all students' data
-  const totalStudents = 150;
-  const studentRank = 12;
+  const totalStudents = 0;
+  const studentRank = 0;
 
   // Calculate stats
   const totalTests = testScores.length;
@@ -107,11 +100,11 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
       {/* Stats Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Tests */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Total Tests</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{totalTests}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{totalTests}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <BarChart3 className="w-6 h-6 text-blue-600" />
@@ -120,11 +113,11 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
         </div>
 
         {/* Average Score */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Average Score</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{averageScore}%</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{averageScore}%</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <Target className="w-6 h-6 text-green-600" />
@@ -133,11 +126,11 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
         </div>
 
         {/* Class Rank */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Class Rank</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">#{studentRank}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">#{studentRank}</p>
               <p className="text-xs text-gray-500 mt-1">out of {totalStudents}</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -147,12 +140,12 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
         </div>
 
         {/* Improvement */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Improvement</p>
-              <p className="text-3xl font-bold text-green-600 mt-1">+12%</p>
-              <p className="text-xs text-gray-500 mt-1">vs last month</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-500 mt-1">—</p>
+              <p className="text-xs text-gray-500 mt-1">no data yet</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-green-600" />
@@ -162,17 +155,27 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
       </div>
 
       {/* Charts Section */}
+      {totalTests === 0 ? (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-8 h-8 text-blue-600" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">No Test Scores Yet</h3>
+          <p className="text-gray-600">Your test scores and performance analytics will appear here once your teacher publishes results.</p>
+        </div>
+      ) : (
+      <>
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Score Trend Chart */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
             <h3 className="text-lg font-bold text-gray-900">Score Trend</h3>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Filter className="w-4 h-4 text-gray-600" />
               <select
                 value={trendFilter}
                 onChange={(e) => setTrendFilter(e.target.value)}
-                className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
               >
                 {subjects.map((subject) => (
                   <option key={subject} value={subject}>
@@ -182,15 +185,15 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
               </select>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <LineChart data={trendChartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="name" 
-                tick={{ fontSize: 12 }}
-                angle={-45}
+                tick={{ fontSize: 10 }}
+                angle={-35}
                 textAnchor="end"
-                height={80}
+                height={60}
               />
               <YAxis 
                 domain={[0, 100]}
@@ -213,15 +216,15 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
         </div>
 
         {/* Subject-wise Performance */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
             <h3 className="text-lg font-bold text-gray-900">Subject-wise Performance</h3>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Filter className="w-4 h-4 text-gray-600" />
               <select
                 value={subjectPerfFilter}
                 onChange={(e) => setSubjectPerfFilter(e.target.value)}
-                className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
               >
                 {subjects.map((subject) => (
                   <option key={subject} value={subject}>
@@ -231,15 +234,15 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
               </select>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={subjectPerfChartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="subject" 
-                tick={{ fontSize: 12 }}
-                angle={-45}
+                tick={{ fontSize: 10 }}
+                angle={-35}
                 textAnchor="end"
-                height={80}
+                height={60}
               />
               <YAxis 
                 domain={[0, 100]}
@@ -261,14 +264,14 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
 
       {/* Recent Test Scores Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+        <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <h3 className="text-lg font-bold text-gray-900">Recent Test Scores</h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <Filter className="w-4 h-4 text-gray-600" />
             <select
               value={tableFilter}
               onChange={(e) => setTableFilter(e.target.value)}
-              className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
             >
               {subjects.map((subject) => (
                 <option key={subject} value={subject}>
@@ -278,7 +281,52 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
             </select>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="md:hidden divide-y divide-gray-200">
+          {tableFilteredScores.map((test, index) => {
+            const percentage = Math.round((test.score / test.maxScore) * 100);
+            return (
+              <div key={index} className="p-4 space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-semibold text-gray-900 text-sm leading-5">{test.testName}</p>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+                    {test.subject}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {new Date(test.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-gray-900">{test.score}/{test.maxScore}</p>
+                  <span className={`font-semibold text-sm ${
+                    percentage >= 90 ? 'text-green-600' :
+                    percentage >= 75 ? 'text-blue-600' :
+                    percentage >= 60 ? 'text-yellow-600' :
+                    'text-red-600'
+                  }`}>
+                    {percentage}%
+                  </span>
+                </div>
+                <div className="bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full ${
+                      percentage >= 90 ? 'bg-green-500' :
+                      percentage >= 75 ? 'bg-blue-500' :
+                      percentage >= 60 ? 'bg-yellow-500' :
+                      'bg-red-500'
+                    }`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
@@ -354,8 +402,8 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
       </div>
 
       {/* Performance Insight */}
-      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6">
-        <div className="flex items-start gap-4">
+      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
           <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
             <Award className="w-6 h-6 text-white" />
           </div>
@@ -371,6 +419,8 @@ export function TestScoresSection({ studentName }: TestScoresSectionProps) {
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

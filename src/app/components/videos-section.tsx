@@ -1,6 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Youtube, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { FadeIn } from './fade-in';
 
 const videos = [
   {
@@ -60,17 +61,20 @@ export function VideosSection() {
     <section className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3">
-            <Youtube className="w-6 h-6 sm:w-8 sm:h-8 text-red-600 fill-red-600" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-              Latest Videos
-            </h2>
+        <FadeIn>
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3">
+              <Youtube className="w-6 h-6 sm:w-8 sm:h-8 text-red-600 fill-red-600" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+                Latest Videos
+              </h2>
+            </div>
+            <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
           </div>
-          <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
-        </div>
+        </FadeIn>
 
         {/* Videos Carousel */}
+        <FadeIn delay={0.15}>
         <div className="relative max-w-6xl mx-auto">
           {/* Left Arrow */}
           {showLeftArrow && (
@@ -98,7 +102,7 @@ export function VideosSection() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-12"
+            className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-12 snap-x snap-mandatory"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {videos.map((video) => (
@@ -107,7 +111,7 @@ export function VideosSection() {
                 href={video.videoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 w-64 sm:w-80 group"
+                className="flex-shrink-0 w-64 sm:w-80 group snap-start"
               >
                 {/* Thumbnail */}
                 <div className="relative rounded-xl overflow-hidden shadow-lg mb-3 aspect-video bg-gray-200">
@@ -131,7 +135,12 @@ export function VideosSection() {
               </a>
             ))}
           </div>
+          {/* Mobile scroll hint */}
+          <div className="sm:hidden flex justify-center mt-4 gap-1">
+            <span className="text-xs text-gray-400">← Swipe to explore →</span>
+          </div>
         </div>
+        </FadeIn>
       </div>
     </section>
   );

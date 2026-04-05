@@ -1,5 +1,6 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { GraduationCap } from 'lucide-react';
+import { FadeIn, StaggerContainer, StaggerItem } from './fade-in';
 import faculty1Image from '../../assets/facaulty_1.png';
 import faculty2Image from '../../assets/facaulty_2.png';
 
@@ -23,26 +24,28 @@ export function FacultiesSection() {
     <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Our Faculties
-          </h2>
-          <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
-        </div>
+        <FadeIn>
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Our Faculties
+            </h2>
+            <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
+          </div>
+        </FadeIn>
 
         {/* Faculty Cards */}
-        <div className="flex flex-wrap justify-center gap-6 sm:gap-8 max-w-5xl mx-auto">
+        <StaggerContainer className="flex flex-wrap justify-center gap-6 sm:gap-8 max-w-5xl mx-auto">
           {faculties.map((faculty, index) => (
-            <div 
+            <StaggerItem 
               key={index} 
-              className="bg-white rounded-3xl shadow-lg overflow-hidden w-full sm:w-72 flex flex-col"
+              className="bg-white rounded-3xl shadow-lg overflow-hidden w-full sm:w-72 flex flex-col group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
             >
               {/* Image Section */}
               <div className="bg-gray-100 h-56 sm:h-64 overflow-hidden">
                 <ImageWithFallback
                   src={faculty.image}
                   alt={faculty.name}
-                  className="w-full h-full object-cover grayscale"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                 />
               </div>
 
@@ -62,9 +65,9 @@ export function FacultiesSection() {
                   <p className="text-left">{faculty.qualifications}</p>
                 </div>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

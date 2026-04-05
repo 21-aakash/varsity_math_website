@@ -26,73 +26,8 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
 
-  // Mock assignments data - Replace with Google Sheets data
-  const [assignments, setAssignments] = useState<Assignment[]>([
-    {
-      id: '1',
-      title: 'Algebra Quiz - Chapter 5',
-      description: 'Solving quadratic equations and factorization',
-      dueDate: '2026-02-15',
-      totalQuestions: 10,
-      questions: [],
-      status: 'completed',
-      score: 85,
-      completedAt: '2026-02-10',
-      createdAt: '2026-02-01'
-    },
-    {
-      id: '2',
-      title: 'Trigonometry Assessment',
-      description: 'Sine, cosine, and tangent ratios',
-      dueDate: '2026-02-20',
-      totalQuestions: 8,
-      questions: [],
-      status: 'completed',
-      score: 92,
-      completedAt: '2026-02-12',
-      createdAt: '2026-02-05'
-    },
-    {
-      id: '3',
-      title: 'Calculus - Derivatives Quiz',
-      description: 'Basic differentiation rules and applications',
-      dueDate: '2026-02-25',
-      totalQuestions: 12,
-      questions: [
-        {
-          id: 'q1',
-          questionText: 'What is the derivative of x²?',
-          options: ['x', '2x', 'x³', '2'],
-          correctAnswer: 1
-        },
-        {
-          id: 'q2',
-          questionText: 'Find the derivative of 3x³ + 2x - 5',
-          options: ['9x² + 2', '6x² + 2', '9x² + 2x', '3x² + 2'],
-          correctAnswer: 0
-        },
-        {
-          id: 'q3',
-          questionText: 'What is the power rule for differentiation?',
-          imageUrl: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&h=300&fit=crop',
-          options: ['d/dx(xⁿ) = nxⁿ⁻¹', 'd/dx(xⁿ) = xⁿ⁺¹', 'd/dx(xⁿ) = nxⁿ', 'd/dx(xⁿ) = n'],
-          correctAnswer: 0
-        }
-      ],
-      status: 'pending',
-      createdAt: '2026-02-08'
-    },
-    {
-      id: '4',
-      title: 'Geometry - Circle Properties',
-      description: 'Understanding radius, diameter, circumference, and area',
-      dueDate: '2026-02-10',
-      totalQuestions: 6,
-      questions: [],
-      status: 'overdue',
-      createdAt: '2026-01-28'
-    }
-  ]);
+  // Will be populated from API (Google Sheets) in future
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
 
   const handleCreateAssignment = (assignment: Assignment) => {
     setAssignments([assignment, ...assignments]);
@@ -129,7 +64,7 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Assignments</h1>
           <p className="text-gray-600 mt-1">Manage and complete your assignments</p>
@@ -137,7 +72,7 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
         {isTeacher && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <FileText className="w-5 h-5" />
             Create Assignment
@@ -198,22 +133,22 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
 
       {/* New Assignments */}
       {(pendingAssignments.length > 0 || overdueAssignments.length > 0) && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">New Assignments</h2>
           <div className="space-y-4">
             {/* Overdue */}
             {overdueAssignments.map(assignment => (
               <div key={assignment.id} className="border-l-4 border-red-500 bg-red-50 rounded-lg p-4">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-bold text-gray-900 text-lg">{assignment.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg">{assignment.title}</h3>
                       <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
                         OVERDUE
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">{assignment.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         <span>Due: {new Date(assignment.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -227,7 +162,7 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
                   <button
                     onClick={() => handleTakeQuiz(assignment)}
                     disabled={!assignment.questions || assignment.questions.length === 0}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium text-sm inline-flex items-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium text-sm inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                   >
                     Start Now
                     <ChevronRight className="w-4 h-4" />
@@ -239,16 +174,16 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
             {/* Pending */}
             {pendingAssignments.map(assignment => (
               <div key={assignment.id} className="border-l-4 border-blue-500 bg-blue-50 rounded-lg p-4">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-bold text-gray-900 text-lg">{assignment.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg">{assignment.title}</h3>
                       <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
                         NEW
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">{assignment.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         <span>Due: {new Date(assignment.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -262,7 +197,7 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
                   <button
                     onClick={() => handleTakeQuiz(assignment)}
                     disabled={!assignment.questions || assignment.questions.length === 0}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm inline-flex items-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                   >
                     Take Quiz
                     <ChevronRight className="w-4 h-4" />
@@ -276,22 +211,22 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
 
       {/* Past Assignments */}
       {completedAssignments.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Past Assignments</h2>
           <div className="space-y-4">
             {completedAssignments.map(assignment => (
               <div key={assignment.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-bold text-gray-900 text-lg">{assignment.title}</h3>
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg">{assignment.title}</h3>
                       <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1">
                         <CheckCircle className="w-3 h-3" />
                         COMPLETED
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">{assignment.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         <span>Submitted: {assignment.completedAt ? new Date(assignment.completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
@@ -302,7 +237,7 @@ export function AssignmentsPage({ studentName, isTeacher = false }: AssignmentsP
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <div className={`text-3xl font-bold ${
                       (assignment.score || 0) >= 90 ? 'text-green-600' :
                       (assignment.score || 0) >= 75 ? 'text-blue-600' :

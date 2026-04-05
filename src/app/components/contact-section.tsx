@@ -1,5 +1,8 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import { Sun } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { FadeIn } from './fade-in';
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -9,10 +12,17 @@ export function ContactSection() {
     message: ''
   });
 
+  const [sending, setSending] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setSending(true);
+    // Simulate sending (replace with real API call later)
+    setTimeout(() => {
+      toast.success('Message sent! We\'ll get back to you soon.');
+      setFormData({ name: '', email: '', phone: '', message: '' });
+      setSending(false);
+    }, 800);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -23,14 +33,15 @@ export function ContactSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-blue-100">
+    <section id="contact" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-blue-50 to-blue-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <FadeIn>
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
             {/* Left Side - Image and Heading */}
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                Get in touch with us ☀️
+                Get in touch with us <Sun className="w-6 h-6 sm:w-7 sm:h-7 text-yellow-500 inline" />
               </h2>
               <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 We're here to support, guide and inspire you every step of the way.
@@ -119,14 +130,16 @@ export function ContactSection() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2.5 sm:py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
+                  disabled={sending}
+                  className="w-full bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-semibold py-2.5 sm:py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
                 >
-                  Send Message
+                  {sending ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>
           </div>
         </div>
+        </FadeIn>
       </div>
     </section>
   );

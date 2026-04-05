@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "./components/navbar";
 import { AnnouncementBanner } from "./components/announcement-banner";
 import { HeroSection } from "./components/hero-section";
@@ -12,32 +14,33 @@ import { WhySection } from "./components/why-section";
 import { ContactSection } from "./components/contact-section";
 import { Footer } from "./components/footer";
 import { StudentDashboard } from "./components/student-dashboard";
+import { AuthSession, clearSession, loadSession, persistSession } from "./lib/auth";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [studentName, setStudentName] = useState("");
-  const [studentEmail, setStudentEmail] = useState("");
+  const [session, setSession] = useState<AuthSession | null>(() => loadSession());
 
-  const handleLoginSuccess = (name: string, email: string) => {
-    setStudentName(name);
-    setStudentEmail(email);
-    setIsLoggedIn(true);
+  const handleLoginSuccess = (nextSession: AuthSession) => {
+    persistSession(nextSession);
+    setSession(nextSession);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setStudentName("");
-    setStudentEmail("");
+    clearSession();
+    setSession(null);
   };
 
   // If logged in, show dashboard
-  if (isLoggedIn) {
+  if (session) {
     return (
-      <StudentDashboard
-        studentName={studentName}
-        studentEmail={studentEmail}
-        onLogout={handleLogout}
-      />
+      <>
+        <StudentDashboard
+          token={session.token}
+          studentName={session.name}
+          studentEmail={session.email}
+          onLogout={handleLogout}
+        />
+        <ToastContainer position="top-right" autoClose={2500} newestOnTop closeOnClick />
+      </>
     );
   }
 
@@ -56,6 +59,7 @@ export default function App() {
       <ContactSection />
       <Footer />
       <SocialButtons />
+      <ToastContainer position="top-right" autoClose={2500} newestOnTop closeOnClick />
     </div>
   );
 }

@@ -1,11 +1,13 @@
-import { Upload, CheckCircle, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Camera, X as XIcon } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+import { EnrollmentResponse, submitEnrollment } from '../lib/auth';
 
 interface EnrollmentFormProps {
   studentName: string;
   studentEmail: string;
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: EnrollmentResponse) => void;
 }
 
 export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }: EnrollmentFormProps) {
@@ -14,59 +16,70 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
     lastName: studentName.split(' ')[1] || '',
     phone: '',
     email: studentEmail,
-    course: '',
-    paymentMethod: 'online',
+    course: '' as '' | 'foundation_7_10' | 'advanced_11_12',
+    paymentMethod: 'online' as 'online' | 'cash',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
-  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
-  const [paymentScreenshotPreview, setPaymentScreenshotPreview] = useState<string | null>(null);
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Only JPG, PNG, and WebP images are allowed.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Photo must be less than 5 MB.');
+      return;
+    }
+    setPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
 
-  const profileImageRef = useRef<HTMLInputElement>(null);
-  const paymentScreenshotRef = useRef<HTMLInputElement>(null);
+  const removePhoto = () => {
+    setPhoto(null);
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const courses = [
-    'Class 11 Mathematics',
-    'Class 12 Mathematics',
-    'JEE Main Preparation',
-    'JEE Advanced Preparation',
-    'Foundation Course (Class 9-10)',
-    'Crash Course - Board Exams',
+    { value: 'foundation_7_10' as const, label: 'Foundation 7-10' },
+    { value: 'advanced_11_12' as const, label: 'Advanced 11-12' },
   ];
 
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfileImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handlePaymentScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPaymentScreenshot(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPaymentScreenshotPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In real app, this would upload files and submit to backend
-    onSubmit({
-      ...formData,
-      profileImage,
-      paymentScreenshot,
-    });
+    if (!formData.course) {
+      toast.error('Please select a course.');
+      return;
+    }
+    if (!photo) {
+      toast.error('Please upload a profile photo.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await submitEnrollment({
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+        course: formData.course,
+        paymentMethod: formData.paymentMethod,
+        photo,
+      });
+      toast.success(response.message || 'Enrollment submitted successfully.');
+      onSubmit(response);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to submit enrollment.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -92,6 +105,57 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
             <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">1</span>
             Personal Information
           </h3>
+
+          {/* Profile Photo Upload */}
+          <div className="flex flex-col items-center mb-6">
+            <label className="block text-gray-700 font-semibold mb-3 text-sm">
+              Profile Photo *
+            </label>
+            <div className="relative">
+              {photoPreview ? (
+                <div className="relative">
+                  <img
+                    src={photoPreview}
+                    alt="Profile preview"
+                    className="w-28 h-28 rounded-full object-cover border-4 border-blue-200 shadow-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={removePhoto}
+                    className="absolute -top-1 -right-1 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+                  >
+                    <XIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-28 h-28 rounded-full border-2 border-dashed border-gray-300 hover:border-blue-400 flex flex-col items-center justify-center text-gray-400 hover:text-blue-500 transition-colors bg-gray-50"
+                >
+                  <Camera className="w-8 h-8 mb-1" />
+                  <span className="text-xs font-medium">Upload</span>
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp"
+                onChange={handlePhotoChange}
+                className="hidden"
+              />
+            </div>
+            {photoPreview && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Change Photo
+              </button>
+            )}
+            <p className="text-xs text-gray-500 mt-1">JPG, PNG, or WebP (max 5 MB)</p>
+          </div>
           
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -153,45 +217,6 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
             </div>
           </div>
 
-          {/* Profile Image Upload */}
-          <div className="mt-4">
-            <label className="block text-gray-700 font-semibold mb-2 text-sm">
-              Profile Photo *
-            </label>
-            <div className="flex items-start gap-4">
-              {profileImagePreview && (
-                <img
-                  src={profileImagePreview}
-                  alt="Profile preview"
-                  className="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
-                />
-              )}
-              <div className="flex-1">
-                <input
-                  type="file"
-                  ref={profileImageRef}
-                  accept="image/*"
-                  onChange={handleProfileImageChange}
-                  className="hidden"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => profileImageRef.current?.click()}
-                  className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors flex items-center justify-center gap-2 text-gray-600 hover:text-blue-600"
-                >
-                  <Upload className="w-5 h-5" />
-                  {profileImage ? 'Change Photo' : 'Upload Photo'}
-                </button>
-                {profileImage && (
-                  <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4" />
-                    {profileImage.name}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Course Selection */}
@@ -214,8 +239,8 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
             >
               <option value="">Choose a course...</option>
               {courses.map((course) => (
-                <option key={course} value={course}>
-                  {course}
+                <option key={course.value} value={course.value}>
+                  {course.label}
                 </option>
               ))}
             </select>
@@ -275,58 +300,17 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
             </div>
           </div>
 
-          {/* Payment Screenshot Upload - Only for Online Payment */}
-          {formData.paymentMethod === 'online' && (
-            <div className="mt-4">
-              <label className="block text-gray-700 font-semibold mb-2 text-sm">
-                Payment Screenshot *
-              </label>
-              <div className="space-y-3">
-                {paymentScreenshotPreview && (
-                  <div className="border border-gray-300 rounded-lg p-3">
-                    <img
-                      src={paymentScreenshotPreview}
-                      alt="Payment screenshot preview"
-                      className="max-w-full h-auto max-h-64 rounded-lg mx-auto"
-                    />
-                  </div>
-                )}
-                <div>
-                  <input
-                    type="file"
-                    ref={paymentScreenshotRef}
-                    accept="image/*"
-                    onChange={handlePaymentScreenshotChange}
-                    className="hidden"
-                    required={formData.paymentMethod === 'online'}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => paymentScreenshotRef.current?.click()}
-                    className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors flex items-center justify-center gap-2 text-gray-600 hover:text-blue-600"
-                  >
-                    <Upload className="w-5 h-5" />
-                    {paymentScreenshot ? 'Change Screenshot' : 'Upload Payment Screenshot'}
-                  </button>
-                  {paymentScreenshot && (
-                    <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
-                      <CheckCircle className="w-4 h-4" />
-                      {paymentScreenshot.name}
-                    </p>
-                  )}
-                  <p className="text-xs text-gray-500 mt-2">
-                    Please upload a clear screenshot of your payment confirmation
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {formData.paymentMethod === 'cash' && (
+          {formData.paymentMethod === 'cash' ? (
             <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
                 <span className="font-semibold">Note:</span> Please visit our center to complete the cash payment. 
                 Our team will verify your enrollment after payment.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                <span className="font-semibold">Note:</span> For online payment, submit the form after payment. No screenshot upload is required.
               </p>
             </div>
           )}
@@ -343,9 +327,10 @@ export function EnrollmentForm({ studentName, studentEmail, onClose, onSubmit }:
           </button>
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+            disabled={isSubmitting}
+            className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
           >
-            Submit Enrollment
+            {isSubmitting ? 'Submitting...' : 'Submit Enrollment'}
           </button>
         </div>
       </form>

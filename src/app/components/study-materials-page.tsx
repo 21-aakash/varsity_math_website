@@ -25,89 +25,8 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
   const [selectedMaterial, setSelectedMaterial] = useState<StudyMaterial | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
-  // Mock data - Replace with Google Drive API integration
-  const [materials, setMaterials] = useState<StudyMaterial[]>([
-    {
-      id: '1',
-      title: 'Algebra - Complete Guide',
-      category: 'books',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'algebra-guide.pdf',
-      uploadedBy: 'Prof. Smith',
-      uploadedAt: '2026-02-01',
-      fileSize: '2.5 MB'
-    },
-    {
-      id: '2',
-      title: 'Calculus Textbook',
-      category: 'books',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'calculus-textbook.pdf',
-      uploadedBy: 'Prof. Johnson',
-      uploadedAt: '2026-01-28',
-      fileSize: '5.8 MB'
-    },
-    {
-      id: '3',
-      title: '2025 Final Exam Paper',
-      category: 'previous-papers',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: '2025-final-exam.pdf',
-      uploadedBy: 'Prof. Smith',
-      uploadedAt: '2026-01-15',
-      fileSize: '1.2 MB'
-    },
-    {
-      id: '4',
-      title: '2024 Mid-Term Paper',
-      category: 'previous-papers',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: '2024-midterm.pdf',
-      uploadedBy: 'Prof. Smith',
-      uploadedAt: '2026-01-10',
-      fileSize: '980 KB'
-    },
-    {
-      id: '5',
-      title: 'Advanced Trigonometry Reference',
-      category: 'reference-books',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'trig-reference.pdf',
-      uploadedBy: 'Prof. Davis',
-      uploadedAt: '2026-02-05',
-      fileSize: '3.1 MB'
-    },
-    {
-      id: '6',
-      title: 'Geometry Formulas Sheet',
-      category: 'reference-books',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'geometry-formulas.pdf',
-      uploadedBy: 'Prof. Davis',
-      uploadedAt: '2026-02-03',
-      fileSize: '1.5 MB'
-    },
-    {
-      id: '7',
-      title: 'Derivatives - Handwritten Notes',
-      category: 'handwritten-notes',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'derivatives-notes.pdf',
-      uploadedBy: 'Prof. Johnson',
-      uploadedAt: '2026-02-07',
-      fileSize: '4.2 MB'
-    },
-    {
-      id: '8',
-      title: 'Integration Techniques Notes',
-      category: 'handwritten-notes',
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      fileName: 'integration-notes.pdf',
-      uploadedBy: 'Prof. Johnson',
-      uploadedAt: '2026-02-06',
-      fileSize: '3.7 MB'
-    }
-  ]);
+  // Will be populated from Google Drive API integration
+  const [materials, setMaterials] = useState<StudyMaterial[]>([]);
 
   const categories = [
     {
@@ -178,7 +97,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
     return (
       <div className="space-y-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex flex-wrap items-center gap-2 text-sm">
           <button
             onClick={() => setSelectedCategory(null)}
             className="text-blue-600 hover:text-blue-700 font-medium"
@@ -190,7 +109,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{category?.name}</h1>
             <p className="text-gray-600 mt-1">{category?.description}</p>
@@ -198,7 +117,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
           {isTeacher && (
             <button
               onClick={() => setShowUploadModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Upload className="w-5 h-5" />
               Upload Material
@@ -212,7 +131,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
             {categoryMaterials.map(material => (
               <div
                 key={material.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow"
+                className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow"
               >
                 <div className={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center mb-4`}>
                   <FileText className={`w-6 h-6 ${colors.text}`} />
@@ -288,7 +207,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Study Materials</h1>
           <p className="text-gray-600 mt-1">Access all your learning resources</p>
@@ -319,7 +238,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
       </div>
 
       {/* Category Cards */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {categories.map(category => {
           const count = getCategoryMaterials(category.id).length;
           const colors = getColorClasses(category.color);
@@ -329,7 +248,7 @@ export function StudyMaterialsPage({ studentName, isTeacher = false }: StudyMate
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-shadow text-left group"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-shadow text-left group"
             >
               <div className={`w-16 h-16 ${colors.bg} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                 <Icon className={`w-8 h-8 ${colors.text}`} />
